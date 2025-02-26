@@ -6,6 +6,8 @@ import addProduct from "./components/addProduct"
 import cart from "./components/cart"
 import Login from "./components/Login"
 import Register from "./components/Register"
+import EditInstrument from "./components/EditInstrument";
+import DeleteInstrument from "./components/DeleteInstrument";
 
     
 export default class App extends Component 
@@ -21,6 +23,8 @@ export default class App extends Component
                     <Route exact path = "/cart" component = {cart} />
                     <Route exact path="/" component={home} />
                     <Route exact path="/home" component={home}/> 
+                    <Route path="/editInstrument/:id" component={EditInstrument} />
+                    <Route path="/deleteInstrument/:id" component={DeleteInstrument} />
                     <Route path="*" component={home}/>                            
                 </Switch>
             </BrowserRouter>

@@ -20,7 +20,7 @@ export default class AddInstrument extends Component
             colour:"",
             year:"",
             price:"",
-            redirectToDisplayAllCars:false
+            redirectTohome:false
         }
     }
 
