@@ -14,10 +14,10 @@ export default class Register extends Component
         super(props)
         
         this.state = {
-            name: "",
+            username: "",
             email: "",
             password: "",
-            confirmPassword: "",
+            accessLevel: 1, // Default access level for registered users
             errorMessage: "",
             isRegistered: false
         } 
@@ -34,20 +34,14 @@ export default class Register extends Component
     {
         e.preventDefault()
 
-        if (this.state.password !== this.state.confirmPassword) {
-            this.setState({errorMessage: "Passwords do not match"})
-            return
-        }
-
-        const user = {
-            first_name: this.state.name.split(' ')[0],
-            last_name: this.state.name.split(' ')[1] || '',
-            username: this.state.name,
+        const registerObject = {
+            username: this.state.username,
             email: this.state.email,
-            password: this.state.password
+            password: this.state.password,
+            accessLevel: this.state.accessLevel
         }
 
-        axios.post(`${SERVER_HOST}/users/register`, user)
+        axios.post(`${SERVER_HOST}/users/register`, registerObject)
         .then(res => 
         {     
             if(res.data)
@@ -66,7 +60,11 @@ export default class Register extends Component
             {
                 this.setState({errorMessage: "Registration failed"})
             }
-        })   
+        })
+        .catch(err => {
+            console.error("Error registering:", err);
+            this.setState({errorMessage: "Registration failed"});
+        });
     }
 
 
@@ -75,18 +73,18 @@ export default class Register extends Component
         return (
             <form className="form-container" noValidate={true} id="loginOrRegistrationForm">
            
-                {this.state.isRegistered ? <Redirect to="/home"/> : null} 
+                {this.state.isRegistered ? <Redirect to="/login"/> : null} 
             
-                <h2>New User Registration</h2>
+                <h2>Register</h2>
                 
                 {this.state.errorMessage && <p className="error">{this.state.errorMessage}</p>}
            
                 <input  
-                    name="name"              
+                    name="username"              
                     type="text"
-                    placeholder="Name"
-                    autoComplete="name"
-                    value={this.state.name}
+                    placeholder="Username"
+                    autoComplete="username"
+                    value={this.state.username}
                     onChange={this.handleChange}
                 /><br/>           
 
@@ -107,18 +105,9 @@ export default class Register extends Component
                     title="Password must be at least ten-digits long and contains at least one lowercase letter, one uppercase letter, one digit and one of the following characters (£!#€$%^&*)"
                     value={this.state.password}
                     onChange={this.handleChange}
-                /><br/>           
-
-                <input          
-                    name="confirmPassword"    
-                    type="password"
-                    placeholder="Confirm password"
-                    autoComplete="confirmPassword"
-                    value={this.state.confirmPassword}
-                    onChange={this.handleChange}
                 /><br/><br/>
                 
-                <button type="button" className="green-button" onClick={this.handleSubmit}>Register New User</button>
+                <button type="button" className="green-button" onClick={this.handleSubmit}>Register</button>
                 <Link className="red-button" to={"/home"}>Cancel</Link>   
             </form>
         )

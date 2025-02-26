@@ -1,0 +1,10 @@
+_id
+67ac6d2e6eb6de1bcc842d8b
+name
+"Administrator"
+email
+"admin@admin.com"
+password
+"123!"£qweQWE"
+__v
+0

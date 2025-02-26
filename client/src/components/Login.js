@@ -31,23 +31,24 @@ export default class Login extends Component
     {
         e.preventDefault()
 
-        const user = {
+        const loginObject = {
             email: this.state.email,
             password: this.state.password
         }
 
-        axios.post(`${SERVER_HOST}/users/login`, user)
+        axios.post(`${SERVER_HOST}/users/login`, loginObject)
         .then(res => 
         {     
             if(res.data)
             {
-                if (res.data.errorMessage)
+                if (res.data.error)
                 {
-                    this.setState({errorMessage: res.data.errorMessage})
+                    this.setState({errorMessage: res.data.error})
                 }
                 else // user successfully logged in
                 { 
                     console.log("User logged in")                    
+                    localStorage.setItem("token", res.data.token);
                     this.setState({isLoggedIn:true})
                 }        
             }
@@ -55,7 +56,11 @@ export default class Login extends Component
             {
                 this.setState({errorMessage: "Login failed"})
             }
-        })                
+        })
+        .catch(err => {
+            console.error("Error logging in:", err);
+            this.setState({errorMessage: err.response ? err.response.data.error : "Login failed"});
+        });
     }
 
 
@@ -89,6 +94,7 @@ export default class Login extends Component
                 
                 <button type="button" className="green-button" onClick={this.handleSubmit}>Login</button>
                 <Link className="red-button" to={"/home"}>Cancel</Link>                                      
+
             </form>
         )
     }

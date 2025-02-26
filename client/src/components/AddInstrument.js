@@ -40,7 +40,11 @@ export default class AddInstrument extends Component
             price: this.state.price
         }
 
-        axios.post(`${SERVER_HOST}/instruments`, instrumentObject)
+        axios.post(`${SERVER_HOST}/instruments`, instrumentObject, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}` // Ensure token is sent
+            }
+        })
         .then(res => 
         {   
             if(res.data)
@@ -60,6 +64,7 @@ export default class AddInstrument extends Component
                 console.log("Record not added")
             }
         })
+        .catch(err => console.error("Error adding instrument:", err));
     }
 
     render()

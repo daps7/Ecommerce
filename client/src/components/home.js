@@ -13,14 +13,15 @@ export default class Home extends Component {
         this.state = {
             instruments: [],
             isLoggedIn: false, // Track login status
+            isAdmin: false, // Track admin status
             successMessage: ""
         };
     }
 
     componentDidMount() {
-        axios.get(`${SERVER_HOST}/api/instruments`) // Ensure `/api/instruments`
+        axios.get(`${SERVER_HOST}/api/instruments`)
             .then(res => {
-                console.log("API Response:", res.data); // Debugging
+                console.log("API Response:", res.data);
 
                 if (res.data && !res.data.errorMessage) {
                     this.setState({ instruments: res.data });
@@ -31,16 +32,30 @@ export default class Home extends Component {
             })
             .catch(err => console.error("Error fetching instruments:", err));
 
-        // Check login status (this is a placeholder, replace with actual login check)
-        const isLoggedIn = true; // Replace with actual login check
-        if (isLoggedIn) {
-            this.setState({ isLoggedIn: true, successMessage: "Successfully logged in" });
+        // Check login status and access level
+        const token = localStorage.getItem('token');
+        if (token) {
+            axios.get(`${SERVER_HOST}/users/me`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(res => {
+                if (res.data) {
+                    this.setState({ isLoggedIn: true, successMessage: "Successfully logged in" });
+                    if (res.data.accessLevel === 2) {
+                        this.setState({ isAdmin: true });
+                    }
+                }
+            })
+            .catch(err => console.error("Error checking login status:", err));
         }
     }
 
     handleLogout = () => {
         // Handle logout logic here
-        this.setState({ isLoggedIn: false, successMessage: "" });
+        localStorage.removeItem('token');
+        this.setState({ isLoggedIn: false, isAdmin: false, successMessage: "" });
     }
 
     render() {
@@ -69,7 +84,9 @@ export default class Home extends Component {
                             <Link to="/cart" className="nav-button">
                                 <img src={cart} className="cart-img" alt="Cart"/>
                             </Link>
-                            <Link to="/addProduct" className="nav-button">Add New Product</Link>
+                            {this.state.isAdmin && (
+                                <Link to="/addProduct" className="nav-button">Add New Product</Link>
+                            )}
                         </div>
                     </div>
                 </nav>
@@ -81,7 +98,7 @@ export default class Home extends Component {
                     
                     <div className="table-container">
                         {this.state.instruments.length > 0 ? (
-                            <InstrumentTable instruments={this.state.instruments} />
+                            <InstrumentTable instruments={this.state.instruments} isAdmin={this.state.isAdmin} />
                         ) : (
                             <p>Loading instruments...</p>
                         )}

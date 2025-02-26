@@ -13,7 +13,11 @@ export default class DeleteInstrument extends Component {
     }
 
     handleDelete = () => {
-        axios.delete(`${SERVER_HOST}/instruments/${this.props.match.params.id}`)
+        axios.delete(`${SERVER_HOST}/instruments/${this.props.match.params.id}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}` // Ensure token is sent
+            }
+        })
             .then(res => {
                 if (res.data) {
                     if (res.data.errorMessage) {

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const instrumentsModel = require("../models/instruments");
+const auth = require("../middleware/auth");
 
 // Read all records
 router.get("/instruments", async (req, res) => {
@@ -24,18 +25,18 @@ router.get("/instruments/:id", async (req, res) => {
     }
 });
 
-// Add new record
-router.post("/instruments", async (req, res) => {
+// Add new record (admin only)
+router.post("/instruments", auth(2), async (req, res) => {
     try {
         const newInstrument = await instrumentsModel.create(req.body);
         res.status(201).json(newInstrument);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(400).json({ error: error.message }); // Ensure correct status code
     }
 });
 
-// Update one record
-router.put("/instruments/:id", async (req, res) => {
+// Update one record (admin only)
+router.put("/instruments/:id", auth(2), async (req, res) => {
     try {
         const updatedInstrument = await instrumentsModel.findByIdAndUpdate(
             req.params.id,
@@ -49,8 +50,8 @@ router.put("/instruments/:id", async (req, res) => {
     }
 });
 
-// Delete one record
-router.delete("/instruments/:id", async (req, res) => {
+// Delete one record (admin only)
+router.delete("/instruments/:id", auth(2), async (req, res) => {
     try {
         const deletedInstrument = await instrumentsModel.findByIdAndDelete(req.params.id);
         if (!deletedInstrument) return res.status(404).json({ error: "Instrument not found" });

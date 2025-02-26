@@ -45,7 +45,11 @@ export default class EditInstrument extends Component {
             price: this.state.price
         };
 
-        axios.put(`${SERVER_HOST}/instruments/${this.props.match.params.id}`, instrumentObject)
+        axios.put(`${SERVER_HOST}/instruments/${this.props.match.params.id}`, instrumentObject, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}` // Ensure token is sent
+            }
+        })
             .then(res => {
                 if (res.data) {
                     if (res.data.errorMessage) {
