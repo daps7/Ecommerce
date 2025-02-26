@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Redirect, Link } from "react-router-dom";
-import Form from "react-bootstrap/Form";
 import axios from "axios";
 import { SERVER_HOST } from "../config/global_constants";
 
@@ -66,30 +65,22 @@ export default class EditInstrument extends Component {
             <div className="form-container">
                 {this.state.redirectToHome ? <Redirect to="/home" /> : null}
 
-                <Form>
-                    <Form.Group controlId="type">
-                        <Form.Label>Type</Form.Label>
-                        <Form.Control type="text" name="type" value={this.state.type} onChange={this.handleChange} />
-                    </Form.Group>
+                <form>
+                    <label>Type</label>
+                    <input type="text" name="type" value={this.state.type} onChange={this.handleChange} />
 
-                    <Form.Group controlId="colour">
-                        <Form.Label>Colour</Form.Label>
-                        <Form.Control type="text" name="colour" value={this.state.colour} onChange={this.handleChange} />
-                    </Form.Group>
+                    <label>Colour</label>
+                    <input type="text" name="colour" value={this.state.colour} onChange={this.handleChange} />
 
-                    <Form.Group controlId="year">
-                        <Form.Label>Year</Form.Label>
-                        <Form.Control type="text" name="year" value={this.state.year} onChange={this.handleChange} />
-                    </Form.Group>
+                    <label>Year</label>
+                    <input type="text" name="year" value={this.state.year} onChange={this.handleChange} />
 
-                    <Form.Group controlId="price">
-                        <Form.Label>Price</Form.Label>
-                        <Form.Control type="text" name="price" value={this.state.price} onChange={this.handleChange} />
-                    </Form.Group>
+                    <label>Price</label>
+                    <input type="text" name="price" value={this.state.price} onChange={this.handleChange} />
 
                     <button className="green-button" onClick={this.handleSubmit}>Update</button>
                     <Link className="red-button" to={"/home"}>Cancel</Link>
-                </Form>
+                </form>
             </div>
         );
     }

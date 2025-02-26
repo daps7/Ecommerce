@@ -1,13 +1,8 @@
 import React, {Component} from "react"
 import {Redirect, Link} from "react-router-dom"
-import Form from "react-bootstrap/Form"
-
 import axios from "axios"
-
 import LinkInClass from "../components/LinkInClass"
-
 import {SERVER_HOST} from "../config/global_constants"
-
 
 export default class AddInstrument extends Component
 {
@@ -24,18 +19,15 @@ export default class AddInstrument extends Component
         }
     }
 
-
     componentDidMount() 
     {     
         this.inputToFocus.focus()        
     }
  
- 
     handleChange = (e) => 
     {
         this.setState({[e.target.name]: e.target.value})
     }
-
 
     handleSubmit = (e) => 
     {
@@ -70,38 +62,28 @@ export default class AddInstrument extends Component
         })
     }
 
-
     render()
     {        
         return (
             <div className="form-container"> 
                 {this.state.redirectTohome ? <Redirect to="/home"/> : null}                                            
                     
-                <Form>
-                    <Form.Group controlId="model">
-                        <Form.Label>Model</Form.Label>
-                        <Form.Control ref = {(input) => { this.inputToFocus = input }} type="text" name="type" value={this.state.type} onChange={this.handleChange} />
-                    </Form.Group>
-    
-                    <Form.Group controlId="colour">
-                        <Form.Label>Colour</Form.Label>
-                        <Form.Control type="text" name="colour" value={this.state.colour} onChange={this.handleChange} />
-                    </Form.Group>
-    
-                    <Form.Group controlId="year">
-                        <Form.Label>Year</Form.Label>
-                        <Form.Control type="text" name="year" value={this.state.year} onChange={this.handleChange} />
-                    </Form.Group>
-    
-                    <Form.Group controlId="price">
-                        <Form.Label>Price</Form.Label>
-                        <Form.Control type="text" name="price" value={this.state.price} onChange={this.handleChange} />
-                    </Form.Group> 
+                <form>
+                    <label>Type</label>
+                    <input ref = {(input) => { this.inputToFocus = input }} type="text" name="type" value={this.state.type} onChange={this.handleChange} />
+
+                    <label>Colour</label>
+                    <input type="text" name="colour" value={this.state.colour} onChange={this.handleChange} />
+
+                    <label>Year</label>
+                    <input type="text" name="year" value={this.state.year} onChange={this.handleChange} />
+
+                    <label>Price</label>
+                    <input type="text" name="price" value={this.state.price} onChange={this.handleChange} />
             
                     <LinkInClass value="Add" className="green-button" onClick={this.handleSubmit}/>            
-            
                     <Link className="red-button" to={"/home"}>Cancel</Link>
-                </Form>
+                </form>
             </div>
         )
     }
